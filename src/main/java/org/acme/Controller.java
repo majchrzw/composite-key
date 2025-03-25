@@ -1,8 +1,9 @@
 package org.acme;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.reactive.panache.PanacheRepository;
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -15,11 +16,10 @@ public class Controller {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Product hello() {
+    @WithTransaction()
+    public Uni<Product> hello() {
         Product entity = new Product("name", 1L);
-        repository.persist(entity);
-        return entity;
+        return repository.persist(entity);
     }
 }
 
